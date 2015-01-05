@@ -23,6 +23,7 @@ class Gdal < Formula
   option 'enable-unsupported', "Allow configure to drag in any library it can find. Invoke this at your own risk."
   option 'enable-mdb', 'Build with Access MDB driver (requires Java 1.6+ JDK/JRE, from Apple or Oracle).'
   option "with-libkml", "Build with Google's libkml driver (requires libkml --HEAD or >= 1.3)"
+  option :universal
 
   depends_on :python => :optional
   if build.with? "python"
@@ -236,6 +237,8 @@ class Gdal < Formula
   end
 
   def install
+    ENV.universal_binary if build.universal?
+
     if build.with? 'python'
       ENV.prepend_create_path 'PYTHONPATH', libexec+'lib/python2.7/site-packages'
       numpy_args = [ "build", "--fcompiler=gnu95",
